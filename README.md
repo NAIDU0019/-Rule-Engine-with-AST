@@ -32,6 +32,7 @@ We use MongoDB to store the rules and application metadata.
 
 Schema
 Here is a sample Mongoose schema for storing the rules:
+
 const mongoose = require('mongoose');
 
 const ruleSchema = new mongoose.Schema({
@@ -42,6 +43,7 @@ const ruleSchema = new mongoose.Schema({
 });
 
 module.exports = mongoose.model('Rule', ruleSchema);
+
 Sample Rules
 Rule 1: "((age > 30 AND department = 'Sales') OR (age < 25 AND department = 'Marketing')) AND (salary > 50000 OR experience > 5)"
 Rule 2: "((age > 30 AND department = 'Marketing')) AND (salary > 20000 OR experience > 5)"
@@ -56,16 +58,20 @@ This function takes a list of rule strings and combines them into a single AST. 
 3. evaluate_rule(JSON data)
 This function takes a JSON representing the combined rule's AST and a dictionary containing attributes (e.g., {"age": 35, "department": "Sales", "salary": 60000, "experience": 3}). The function evaluates the rule against the provided data and returns True if the user meets the criteria based on the rule, False otherwise.
 
+
 Test Cases
 Create Individual Rules: Use create_rule to create individual rules from the examples and verify their AST representation.
 Combine Rules: Use combine_rules to combine the example rules and ensure the resulting AST reflects the combined logic.
 Evaluate Rule: Implement sample JSON data and test evaluate_rule for different scenarios.
 Additional Rules: Explore combining additional rules and test the functionality.
+
 Bonus Features
 Error Handling: Implement error handling for invalid rule strings or data formats (e.g., missing operators, invalid comparisons).
 Validations: Implement validations for attributes to be part of a catalog.
 Modify Existing Rules: Allow for modification of existing rules using additional functionalities within create_rule or separate functions. This could involve changing operators, operand values, or adding/removing sub-expressions within the AST.
 User-Defined Functions: Extend the system to support user-defined functions within the rule language for advanced conditions.
+
+
 Getting Started
 Clone the repository:
 bash
@@ -90,9 +96,5 @@ Feel free to submit issues, fork the repository, and send pull requests!
 License
 This project is licensed under the MIT License.
 
-Code
-CopyInsert
-
-Replace `your-username` and `your-repository` with your actual GitHub username and repository name. This README should provide a comprehensive overview and guide for your project.
 
 
