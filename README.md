@@ -114,4 +114,115 @@ Evaluates the combined rule's AST against provided user attributes (e.g., `{"age
 
 ---
 
+
+---
+
+## Adding and Testing Rules
+
+### Step 1: Adding a Rule
+
+1. **Define a Rule String**  
+   Create a rule string that specifies the eligibility conditions. For example:
+   ```plaintext
+   ((age > 30 AND department = 'Sales') OR (age < 25 AND department = 'Marketing')) AND (salary > 50000 OR experience > 5)
+   ```
+
+2. **Create a Rule Using `create_rule` API**  
+   Send a POST request to the API endpoint for rule creation, providing the rule string in the request payload. This API call converts the rule string into an AST and stores it in MongoDB.
+
+   **Example Request**:
+   ```http
+   POST /api/rules/create
+   Content-Type: application/json
+
+   {
+     "ruleString": "((age > 30 AND department = 'Sales') OR (age < 25 AND department = 'Marketing')) AND (salary > 50000 OR experience > 5)"
+   }
+   ```
+
+3. **Check Rule in Database**  
+   Confirm that the rule is saved in MongoDB by checking the `rules` collection. Each rule entry should contain the rule name, AST structure, and timestamps.
+
+### Step 2: Combining Rules
+
+To combine multiple rules, use the `combine_rules` API. This will merge the rules into a single AST, ensuring efficiency by reducing redundancies.
+
+1. **Prepare Rules for Combination**  
+   Add the rule names you want to combine into a list.
+
+2. **Combine Rules Using `combine_rules` API**  
+   Send a POST request to combine the rules by providing the list of rule names.
+
+   **Example Request**:
+   ```http
+   POST /api/rules/combine
+   Content-Type: application/json
+
+   {
+     "rules": ["Rule1", "Rule2"]
+   }
+   ```
+
+3. **Verify Combined Rule**  
+   Check the MongoDB `rules` collection for a new entry or an updated entry with a combined AST representing the merged rules.
+
+### Step 3: Testing Rule Evaluation
+
+You can test rule evaluation by providing JSON data that represents a user profile and submitting it to the `evaluate_rule` API. The API will evaluate the data against the rule's AST and return a boolean indicating eligibility.
+
+1. **Prepare Sample JSON Data**  
+   Create JSON data that represents user attributes. For example:
+   ```json
+   {
+     "age": 35,
+     "department": "Sales",
+     "salary": 60000,
+     "experience": 3
+   }
+   ```
+
+2. **Evaluate Rule Using `evaluate_rule` API**  
+   Send a POST request to evaluate the rule against the provided data.
+
+   **Example Request**:
+   ```http
+   POST /api/rules/evaluate
+   Content-Type: application/json
+
+   {
+     "ruleName": "Rule1",
+     "userData": {
+       "age": 35,
+       "department": "Sales",
+       "salary": 60000,
+       "experience": 3
+     }
+   }
+   ```
+
+3. **Interpret API Response**  
+   The response will return `true` if the data meets the rule conditions or `false` otherwise.
+
+### Step 4: Running Tests
+
+To ensure the system functions as expected, you can run automated tests for rule creation, combination, and evaluation.
+
+1. **Write Tests**  
+   Use the provided test suite or add tests in the `tests` directory. Test cases should include:
+   - **Create Rule Test**: Ensures `create_rule` generates the correct AST structure.
+   - **Combine Rules Test**: Verifies `combine_rules` merges rules correctly without redundant checks.
+   - **Evaluate Rule Test**: Confirms `evaluate_rule` returns correct eligibility based on sample data.
+
+2. **Run Tests**  
+   Execute the test suite with the following command:
+   ```bash
+   npm test
+   ```
+
+   The output will display passed or failed tests, helping you confirm that the rule engine logic is functioning correctly.
+
+---
+
+
+
 This application provides a robust and flexible framework for implementing and managing complex eligibility rules, suitable for various business applications.
